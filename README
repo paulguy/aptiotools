@@ -1,0 +1,9 @@
+aptiotools - tools for working with AMIBIOS Aptio images
+
+to be extended later
+
+to make: make
+
+to run: ./aptio <FILENAME>
+
+will output some information then write each section to a file
