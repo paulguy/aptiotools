@@ -1,4 +1,4 @@
-OBJS   = main.o
+OBJS   = aptiofile.o main.o
 TARGET = aptio
 CFLAGS = -Wall -Wextra -ggdb -Og
 

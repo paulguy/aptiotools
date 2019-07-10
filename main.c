@@ -56,13 +56,23 @@ int main(int argc, char **argv) {
 
     READ_OR_FAIL(hdr)
 
-    fprintf(stderr, "Main Header\n"
+    if(memcmp(hdr.magic, APTIO_SIGNED_MAGIC, sizeof(APTIO_SIGNED_MAGIC)) == 0) {
+        fprintf(stderr, "Signed Aptio image\n");
+    } else if(memcmp(hdr.magic, APTIO_UNSIGNED_MAGIC, sizeof(APTIO_UNSIGNED_MAGIC)) == 0) {
+        fprintf(stderr, "Unsigned Aptio image\n");
+    } else {
+        fprintf(stderr, "Not an Aptio image\n");
+        fclose(in);
+        exit(EXIT_FAILURE);
+    }
+
+    fprintf(stderr, "\n"
+                    "Main Header\n"
                     " Header Size: %u\n"
                     " Flags: %08X\n"
                     " Capsule Size: %u\n"
                     " Volume Offset: %hu\n"
-                    " Table Offset: %hu\n"
-                    "\n",
+                    " Table Offset: %hu\n",
                     hdr.headerSize,
                     hdr.flags,
                     hdr.capsuleSize,
@@ -71,13 +81,15 @@ int main(int argc, char **argv) {
 
     READ_OR_FAIL(unk)
 
-    fprintf(stderr, "Unknown Region\n"
+    fprintf(stderr, "\n"
+                    "Unknown Region\n"
                     " Region Size: %u\n"
-                    " Unknown maybe meaningful value: %hu\n"
-                    "\n",
+                    " Unknown maybe meaningful value: %hu\n",
                     unk.size,
                     unk.unk0);
 
+    fprintf(stderr, "\n"
+                    "Num      Offset       Size  Unknown  Unknown  Unknown\n");
     SEEK_OR_FAIL(hdr.tableOffset, SEEK_SET)
     for(i = 0;; i++) {
         READ_OR_FAIL(item)
@@ -93,6 +105,7 @@ int main(int argc, char **argv) {
         files[i].size = item.size;
     }
 
+    fprintf(stderr, "\n");
     for(i = 0; files[i].size != 0; i++) {
         SEEK_OR_FAIL(files[i].offset, SEEK_SET)
 

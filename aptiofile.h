@@ -22,3 +22,6 @@ typedef struct {
     uint32_t flags1;
     uint32_t flags2;
 } AptioTableItem;
+
+const uint8_t APTIO_SIGNED_MAGIC[16];
+const uint8_t APTIO_UNSIGNED_MAGIC[16];
